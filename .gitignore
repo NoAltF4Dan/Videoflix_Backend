@@ -16,8 +16,6 @@ staticfiles/
 *.mo
 *.pot
 .env
-.env.*
-!.env.example
 .venv/
 venv/
 ENV/
