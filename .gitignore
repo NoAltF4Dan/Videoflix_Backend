@@ -45,3 +45,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 celerybeat-schedule
+__pycache__/
+*.pyc
