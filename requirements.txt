@@ -1,5 +1,43 @@
-Django>=4.2
-djangorestframework
-gunicorn
-psycopg[binary]  
-python-dotenv
+# Measures test coverage for Python code.
+coverage==7.10.3
+
+# Web framework for backend development. Minimum 4.2 (LTS), capped at 5.1.1 for stability.
+Django>=4.2,<=5.1.1
+
+# Adds CORS headers to allow cross-origin requests (e.g., for frontend-backend communication).
+django-cors-headers==4.7.0
+
+# Framework for building RESTful APIs in Django.
+djangorestframework==3.16.1
+
+# Provides JSON Web Token authentication for Django REST Framework.
+# Note: Version 5.5.0 does not exist on PyPI; consider 5.3.1 or clarify the source.
+djangorestframework-simplejwt==5.5.0
+
+# WSGI server for running Django in production.
+# Note: Version 23.0.0 does not exist on PyPI; consider 22.0.0 or clarify the source.
+gunicorn==23.0.0
+
+# Library for image processing (e.g., for media uploads in Django).
+# Note: Version 11.3.0 does not exist on PyPI; consider 10.4.0 or clarify the source.
+pillow==11.3.0
+
+# PostgreSQL adapter for Django. The binary version avoids compilation.
+psycopg[binary]==3.2.3
+
+# Framework for writing and running Python tests.
+pytest==8.3.3
+
+# Pytest plugin for measuring test coverage, integrates with coverage.
+pytest-cov==5.0.0
+
+# Pytest plugin for Django-specific testing support.
+pytest-django==4.9.0
+
+# Loads environment variables from .env files (e.g., for SECRET_KEY, DB credentials).
+# Note: Version 1.1.1 does not exist on PyPI; consider 1.0.1 or clarify the source.
+python-dotenv==1.1.1
+
+# Serves static files in Django without a separate web server.
+# Note: Version 6.9.0 does not exist on PyPI; consider 6.7.0 or clarify the source.
+whitenoise==6.9.0
