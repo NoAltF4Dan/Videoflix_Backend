@@ -1,11 +1,3 @@
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework import status
-from .serializers import RegistrationSerializer
-from .services import EmailService
-from django.contrib.auth.tokens import default_token_generator
-
 import re
 import uuid
 from django.contrib.auth import get_user_model
