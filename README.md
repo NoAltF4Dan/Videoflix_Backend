@@ -1,0 +1,1 @@
+<img src="./assets/logo_icon.svg" alt="Videoflix Logo" width="320">

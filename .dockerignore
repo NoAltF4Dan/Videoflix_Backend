@@ -7,3 +7,4 @@ venv/
 .git
 .media/
 .static/
+__pycache__
