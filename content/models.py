@@ -1,13 +1,17 @@
 from django.db import models
+from django_rq import get_queue
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.core.validators import FileExtensionValidator
-from django_rq import get_queue
-
 from .utils import video_upload_path, validate_video_size, thumbnail_upload_path
 
 
 class Video(models.Model):
+    """
+    Represent a video entity with metadata, category, processing status, HLS output paths, thumbnail,
+
+    and automatic background processing upon creation, enforcing a case-insensitive unique title constraint.
+    """
 
     CATEGORY_CHOICES = [
         ('Action', 'Action'),
@@ -41,7 +45,6 @@ class Video(models.Model):
     processing_status = models.CharField(max_length=20, choices=PROCESSING_STATUS, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     hls_480p_path = models.CharField(max_length=500, blank=True, null=True)
     hls_720p_path = models.CharField(max_length=500, blank=True, null=True)
     hls_1080p_path = models.CharField(max_length=500, blank=True, null=True)
