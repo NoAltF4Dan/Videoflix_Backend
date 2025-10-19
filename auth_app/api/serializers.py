@@ -224,18 +224,4 @@ class PasswordSetSerializer(serializers.Serializer):
         account.set_password(pwd)
         account.save()
         return account
-    
-#--------------
-# RegistrationView
-# Purpose:
-#   Handle user sign-up, create an inactive account, generate an activation token,
-#   and trigger a confirmation email.
-#
-# Methods:
-#   - POST: validates payload with RegistrationSerializer, saves user (inactive),
-#           creates token via default_token_generator, and sends confirmation email.
-#
-# Security & UX:
-#   - Returns generic 400 with "Email or Password is invalid" on serializer errors
-#     to avoid leaking exact validation reasons to attackers.
-#--------------
+
