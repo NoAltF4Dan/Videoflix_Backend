@@ -3,6 +3,18 @@ import uuid
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+
+User = get_user_model()
+
 #--------------
 # RegistrationSerializer
 # Purpose:
@@ -75,5 +87,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
         )
         return user
     
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    pass
+class AccountActivationResponseSerializer(serializers.Serializer):
+    message = serializers.CharField(max_length=255)
+    error = serializers.CharField(max_length=255, required=False)
+
+class LoginSerializer(serializers.Serializer):
+    """Serializer für die Validierung der Login-Daten."""
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+class LoginResponseSerializer(serializers.Serializer):
+    """Serializer für die Login-Response-Daten."""
+    detail = serializers.CharField(max_length=255)
+    user = serializers.DictField(child=serializers.CharField(), required=False)
