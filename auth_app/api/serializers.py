@@ -74,3 +74,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
             is_active=False
         )
         return user
+    
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    pass

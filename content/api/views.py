@@ -1,10 +1,14 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
 from rest_framework import status
 from django.http import HttpResponse
 from django.conf import settings
-from .models import Video
+
+from .serializers import VideoSerializer
+from ..models import Video
+
 import os
 
 #--------------
