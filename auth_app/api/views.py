@@ -236,25 +236,28 @@ class LoginView(APIView):
 # Notes:
 #   - Ignores TokenError for idempotent logout behavior.
 #--------------
-class SignoutView(APIView):
-    """Endpoint for logging out by invalidating tokens and clearing cookies."""
+class LogoutView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        """Invalidate refresh token and clear authentication cookies."""
         refresh_token = request.COOKIES.get('refresh_token')
+        response_data = {'detail': 'Logout successful! All tokens will be deleted.'}
+
         if refresh_token:
             try:
                 token = RefreshToken(refresh_token)
                 token.blacklist()
-            except TokenError:
-                pass
+            except InvalidToken:
+                response_data = {'detail': 'Invalid or expired refresh token.'}
+        else:
+            response_data = {'detail': 'No refresh token provided. Cookies cleared.'}
 
-        response = Response({
-            'detail': 'Logout completed. Tokens invalidated and cookies cleared.'
-        }, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token', path='/', samesite='None', domain=settings.COOKIE_DOMAIN)
-        response.delete_cookie('refresh_token', path='/', samesite='None', domain=settings.COOKIE_DOMAIN)
+        response_serializer = LogoutResponseSerializer(data=response_data)
+        response_serializer.is_valid(raise_exception=True)
+
+        response = Response(response_serializer.data, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
         return response
 
 #--------------
