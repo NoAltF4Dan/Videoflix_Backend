@@ -1,7 +1,5 @@
 <img src="./assets/logo_icon.svg" alt="Videoflix Logo" width="320">
 
-### 📌 Project Description
-
 A production-minded backend for Videoflix, a Netflix‑inspired streaming platform. It powers user authentication, video ingestion & transcoding, secure HLS delivery across multiple resolutions, categories & search, and an admin UI for content operations — all fully containerized with Docker Compose for local dev and deployment.
 
 ## ✨ Features

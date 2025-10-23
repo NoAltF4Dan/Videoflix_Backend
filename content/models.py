@@ -63,6 +63,6 @@ class Video(models.Model):
         super().save(*args, **kwargs)
 
         if is_new and self.original_video:
-            from .tasks import process_video
+            from .task import process_video
             queue = get_queue("default")
             queue.enqueue(process_video, self.id)

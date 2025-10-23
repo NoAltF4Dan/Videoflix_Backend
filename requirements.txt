@@ -41,3 +41,5 @@ python-dotenv==1.1.1
 # Serves static files in Django without a separate web server.
 # Note: Version 6.9.0 does not exist on PyPI; consider 6.7.0 or clarify the source.
 whitenoise==6.9.0
+
+django-rq>=2.10
