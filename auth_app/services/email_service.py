@@ -1,97 +1,97 @@
 import logging
-from smtplib import SMTPException
-
-from django.conf import settings
-from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.template.exceptions import TemplateDoesNotExist
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
+from django.conf import settings
 from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+from django.template.exceptions import TemplateDoesNotExist
+from django.contrib.auth.tokens import default_token_generator
+from smtplib import SMTPException
 
 logger = logging.getLogger(__name__)
 
 
 class EmailService:
     """
-    Service for sending emails
-    currently: Password Reset + Registration Confirmation
+    Utility for dispatching emails, handling password resets and registration confirmations.
     """
 
     @staticmethod
     def send_password_reset_email(user):
-        """Send password reset email with link to frontend page."""
-        token = default_token_generator.make_token(user)
-        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-        reset_url = f"{settings.SITE_URL}/pages/auth/confirm_password.html?uid={uidb64}&token={token}"
+        """
+        Sends an email with a password reset link to the user.
+        """
+        reset_token = default_token_generator.make_token(user)
+        encoded_uid = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_link = f"{settings.SITE_URL}/pages/auth/confirm_password.html?uid={encoded_uid}&token={reset_token}"
 
-        site_name = getattr(settings, 'SITE_NAME', None) or 'Fallback Site Name'
+        site_title = getattr(settings, 'SITE_NAME', 'Default Site Name')
 
-        context = {
+        email_context = {
             'user': user,
-            'reset_url': reset_url,
-            'site_name': site_name,
+            'reset_link': reset_link,
+            'site_title': site_title,
         }
 
         EmailService._send_templated_email(
-            template_name='password_reset',
             subject='Passwort zurücksetzen',
+            template_name='password_reset',
             recipient=user.email,
-            context=context
+            context=email_context
         )
 
     @staticmethod
     def send_registration_confirmation_email(user, token):
-        """Send account activation email with link to frontend page."""
-        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-        confirmation_url = f"{settings.SITE_URL}/pages/auth/activate.html?uid={uidb64}&token={token}"
+        """
+        Sends an email with an account activation link to the user.
+        """
+        encoded_uid = urlsafe_base64_encode(force_bytes(user.pk))
+        activation_link = f"{settings.SITE_URL}/pages/auth/activate.html?uid={encoded_uid}&token={token}"
 
-        context = {
+        email_context = {
             'user': user,
-            'confirmation_url': confirmation_url,
-            'site_name': getattr(settings, 'SITE_NAME', 'Ihre Website'),
+            'activation_link': activation_link,
+            'site_title': getattr(settings, 'SITE_NAME', 'Ihre Website'),
         }
 
         EmailService._send_templated_email(
-            template_name='registration_confirmation',
             subject='Bestätige deine Registrierung',
+            template_name='registration_confirmation',
             recipient=user.email,
-            context=context
+            context=email_context
         )
 
     @staticmethod
-    def _send_templated_email(template_name, subject, recipient, context):
+    def _send_templated_email(subject, template_name, recipient, context):
         """
-        Render and send a templated email.
-        Always sends the text version.
-        Uses HTML version if available, otherwise falls back silently to text.
+        Sends an email using a rendered template. Requires a text version; HTML is optional.
+        Falls back to text if HTML template is missing.
         """
         try:
-            # Text version is required
-            message = render_to_string(f'auth_app/emails/{template_name}.txt', context=context)
+            text_content = render_to_string(f'auth_app/emails/{template_name}.txt', context=context)
         except TemplateDoesNotExist:
-            logger.error(f"Required text template '{template_name}.txt' not found. Email not sent.")
+            logger.error(f"Text template '{template_name}.txt' missing. Email dispatch aborted.")
             raise
 
-        # HTML version is optional
+        html_content = None
         try:
-            html_message = render_to_string(f'auth_app/emails/{template_name}.html', context=context)
+            html_content = render_to_string(f'auth_app/emails/{template_name}.html', context=context)
         except TemplateDoesNotExist:
-            html_message = None  # Silent fallback to text only
+            pass  # HTML is optional, silently fall back to text
 
         try:
             send_mail(
                 subject=subject,
-                message=message,
+                message=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[recipient],
-                html_message=html_message,
+                html_message=html_content,
                 fail_silently=False,
             )
-            logger.info(f"Email successfully sent to {recipient} | Subject: '{subject}'")
-        except SMTPException as e:
-            logger.error(f"SMTP error while sending email to {recipient}: {e}")
+            logger.info(f"Successfully sent email to {recipient} | Subject: '{subject}'")
+        except SMTPException as err:
+            logger.error(f"SMTP failure during email dispatch to {recipient}: {err}")
             raise
-        except Exception as e:
-            logger.exception(f"Unexpected error while sending email to {recipient}: {e}")
+        except Exception as err:
+            logger.exception(f"Unexpected issue during email dispatch to {recipient}: {err}")
             raise
