@@ -43,8 +43,8 @@ Before setting up the project, ensure you have the following installed:
 
 ---
 
-### Setup Instructions
-# Follow these steps to set up the Videoflix backend locally.
+# Setup Instructions
+### Follow these steps to set up the Videoflix backend locally.
 
 ## 1. Clone the Repository
 
@@ -57,10 +57,11 @@ cd videoflix_main
 ## 2. Create a .env File
 
 # Notes:
-Generate a secure SECRET_KEY using Python:
+- Generate a secure SECRET_KEY using Python:
 ``
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ``
+
 - For EMAIL_HOST_USER and EMAIL_HOST_PASSWORD, use a service like Gmail with an App Password or another SMTP provider.
 
 ## 3. Build and Start the Containers
