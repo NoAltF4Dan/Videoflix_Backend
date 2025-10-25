@@ -5,11 +5,9 @@ Videoflix is a Django-based backend application for a video streaming platform. 
 ## ✨ Technologies
 The following technologies are used in the project:
 
-- Django: Python web framework for rapid development and clean design. It provides a robust foundation for the API, authentication, and database management.
-
 - Django REST Framework (DRF): Enables the creation of RESTful APIs with Django, including serialization and authentication.
 
-- djangorestframework-simplejwt: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
+- DRF-simplejwt: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
 
 - django-redis: Provides Redis as a cache backend for Django, enabling efficient caching and session management.
 
@@ -49,29 +47,33 @@ Before setting up the project, ensure you have the following installed:
 ## 1. Clone the Repository
 
 Clone the project repository to your local machine:
-``
+```bash
 git clone <repository-url>
 cd videoflix_main
-``
+```
 
 ## 2. Create a .env File
 
+```bash
+cp .env.template .env
+```
+
 # Notes:
 - Generate a secure SECRET_KEY using Python:
-``
+```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-``
+```
 
 - For EMAIL_HOST_USER and EMAIL_HOST_PASSWORD, use a service like Gmail with an App Password or another SMTP provider.
 
 ## 3. Build and Start the Containers
 
-Use Docker Compose to build and start the services.
-``
+Use Docker Compose to build and start the services:
+```bash
 docker-compose down -v  # Remove existing containers and volumes (optional for fresh setup)
 docker-compose build --no-cache
 docker-compose up
-``
+```
 
 This starts the following services:
 
