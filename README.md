@@ -1,26 +1,27 @@
 <img src="./assets/logo_icon.svg" alt="Videoflix Logo" width="320">
 
-A production-minded backend for Videoflix, a Netflix‑inspired streaming platform. It powers user authentication, video ingestion & transcoding, secure HLS delivery across multiple resolutions, categories & search, and an admin UI for content operations — all fully containerized with Docker Compose for local dev and deployment.
+Videoflix is a Django-based backend application for a video streaming platform. It supports user registration, authentication with JWT (JSON Web Tokens), media uploads, and asynchronous task processing. The project uses PostgreSQL as the database, Redis for caching and asynchronous tasks, and Gunicorn as the WSGI server for production.
 
-## ✨ Features
+## ✨ Technologies
+The following technologies are used in the project:
 
-User accounts & profiles: email/password login, JWT sessions, optional OAuth (Google/Apple) hooks.
+> Django: A powerful Python web framework for rapid development and clean design. It provides a robust foundation for the API, authentication, and database management.
 
-Role‑based access: user, admin (and optional ops) with route guards.
+>Django REST Framework (DRF): Enables the creation of RESTful APIs with Django, including serialization and authentication.
 
-Video ingestion: upload originals; automatic FFmpeg transcode to HLS variants (e.g. 1080p/720p/480p/360p) with segmenting.
+>djangorestframework-simplejwt: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
 
-Adaptive streaming (HLS): master .m3u8 manifest with multiple renditions + captions.
+>django-redis: Provides Redis as a cache backend for Django, enabling efficient caching and session management.
 
-Catalog & discovery: categories, tags, search, continue‑watching, watchlist, trending.
+>
 
-Playback security: signed HLS URLs, short‑lived tokens, geo/IP throttling (optional).
+>
 
-Admin panel: CRUD for titles, seasons/episodes (TV), people, assets, categories, promos.
+>
 
-Observability: health checks /healthz, structured logs, metrics endpoints, request tracing.
+>
 
-Containerized: docker compose up spins up API, DB, cache, object storage, NGINX, and workers.
+>
 
 ---
 
