@@ -79,6 +79,38 @@ This starts the following services:
 - web: Django backend with Gunicorn (container name: videoflix_backend)
 - worker: RQ worker for asynchronous tasks (container name: videoflix_worker)
 
+### 4. Verify the Setup
+
+Check the logs to ensure all services start correctly:
+``
+docker-compose logs
+``
+
+# Expected output includes:
+
+- videoflix_database: database system is ready to accept connections
+- videoflix_redis: Ready to accept connections tcp
+- videoflix_backend: Starting gunicorn ... Listening at: http://0.0.0.0:8000
+- videoflix_worker: Listening on default...
+
+### 5. Test the Application
+
+Test the API endpoints to verify functionality:
+- Authentication:
+``
+curl -X POST http://localhost:8000/api/token/ -d "auth_email=admin@example.com&auth_password=adminpassword" -H "Content-Type: application/x-www-form-urlencoded"
+``
+- This should return access and refresh tokens.
+- Admin Interface:
+Open http://localhost:8000/admin/ in a browser and log in with admin / adminpassword.
+- Registration:
+``
+curl -X POST http://localhost:8000/register/ -d "user_email=test@example.com&user_password=Test12345&password_repeat=Test12345&accept_privacy=on" -H "Content-Type: application/x-www-form-urlencoded"
+``
+
+### 6. Run Tests (Optional)
+Run automated tests to verify code integrity:
+
 > 🔗 **[Frontend Repository ](https://github.com/NoAltF4Dan/Videoflix_frontend)**
 
 ---
