@@ -5,23 +5,41 @@ Videoflix is a Django-based backend application for a video streaming platform. 
 ## ✨ Technologies
 The following technologies are used in the project:
 
-> Django: A powerful Python web framework for rapid development and clean design. It provides a robust foundation for the API, authentication, and database management.
+- Django: Python web framework for rapid development and clean design. It provides a robust foundation for the API, authentication, and database management.
 
->Django REST Framework (DRF): Enables the creation of RESTful APIs with Django, including serialization and authentication.
+- Django REST Framework (DRF): Enables the creation of RESTful APIs with Django, including serialization and authentication.
 
->djangorestframework-simplejwt: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
+- djangorestframework-simplejwt: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
 
->django-redis: Provides Redis as a cache backend for Django, enabling efficient caching and session management.
+- django-redis: Provides Redis as a cache backend for Django, enabling efficient caching and session management.
 
->
+- django-rq: Facilitates asynchronous task processing with Redis Queue (RQ), used for tasks like sending emails.
 
->
+- PostgreSQL: A reliable, open-source relational database for persistent data storage, chosen for its robustness and scalability.
 
->
+- Redis: An in-memory data store used for caching and asynchronous task queues, chosen for its speed and simplicity.
 
->
+- Gunicorn: A production-ready WSGI server for running Django applications, chosen for its performance and compatibility.
 
->
+- python-dotenv: Loads environment variables from a .env file for secure configuration (e.g., secret key, database credentials).
+
+- Whitenoise: Serves static files efficiently in Django without requiring a separate web server.
+
+- Pillow: Handles image processing for media uploads, such as thumbnails.
+
+- psycopg: PostgreSQL adapter for Django, used for database connectivity.
+
+- pytest, pytest-django, pytest-cov, coverage: Testing tools for ensuring code quality and coverage.
+
+---
+
+## Prerequisites
+
+Before setting up the project, ensure you have the following installed:
+
+>Docker and Docker Compose: For running the application in containers.
+Git: For cloning the repository.
+A text editor (e.g., VS Code) for editing configuration files.
 
 ---
 
