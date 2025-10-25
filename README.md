@@ -5,44 +5,36 @@ Videoflix is a Django-based backend application for a video streaming platform. 
 ## ✨ Technologies
 The following technologies are used in the project:
 
-- Django REST Framework (DRF): Enables the creation of RESTful APIs with Django, including serialization and authentication.
-
-- DRF-simplejwt: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
-
-- django-redis: Provides Redis as a cache backend for Django, enabling efficient caching and session management.
-
-- django-rq: Facilitates asynchronous task processing with Redis Queue (RQ), used for tasks like sending emails.
-
-- PostgreSQL: A reliable, open-source relational database for persistent data storage, chosen for its robustness and scalability.
-
-- Redis: An in-memory data store used for caching and asynchronous task queues, chosen for its speed and simplicity.
-
-- Gunicorn: A production-ready WSGI server for running Django applications, chosen for its performance and compatibility.
-
-- python-dotenv: Loads environment variables from a .env file for secure configuration (e.g., secret key, database credentials).
-
-- Whitenoise: Serves static files efficiently in Django without requiring a separate web server.
-
-- Pillow: Handles image processing for media uploads, such as thumbnails.
-
-- psycopg: PostgreSQL adapter for Django, used for database connectivity.
-
-- pytest, pytest-django, pytest-cov, coverage: Testing tools for ensuring code quality and coverage.
+- **Django**: A powerful Python web framework for rapid development and clean design. It provides a robust foundation for the API, authentication, and database management.
+- **Django REST Framework (DRF)**: Enables the creation of RESTful APIs with Django, including serialization and authentication.
+- **djangorestframework-simplejwt**: Implements JWT-based authentication with cookie support for secure and stateless user sessions.
+- **django-redis**: Provides Redis as a cache backend for Django, enabling efficient caching and session management.
+- **django-rq**: Facilitates asynchronous task processing with Redis Queue (RQ), used for tasks like sending emails.
+- **PostgreSQL**: A reliable, open-source relational database for persistent data storage, chosen for its robustness and scalability.
+- **Redis**: An in-memory data store used for caching and asynchronous task queues, chosen for its speed and simplicity.
+- **Gunicorn**: A production-ready WSGI server for running Django applications, chosen for its performance and compatibility.
+- **python-dotenv**: Loads environment variables from a `.env` file for secure configuration (e.g., secret key, database credentials).
+- **Whitenoise**: Serves static files efficiently in Django without requiring a separate web server.
+- **Pillow**: Handles image processing for media uploads, such as thumbnails.
+- **psycopg**: PostgreSQL adapter for Django, used for database connectivity.
+- **pytest, pytest-django, pytest-cov, coverage**: Testing tools for ensuring code quality and coverage.
 
 ---
 
 ## Prerequisites
 
 Before setting up the project, ensure you have the following installed:
-
-- Docker and Docker Compose: For running the application in containers.
-- Git: For cloning the repository.
+- **Docker** and **Docker Compose**: For running the application in containers.
+- **Git**: For cloning the repository.
 - A text editor (e.g., VS Code) for editing configuration files.
 
 ---
 
 # Setup Instructions
 ### Follow these steps to set up the Videoflix backend locally.
+
+- make sure to use the following frontend:
+> 🔗 **[Frontend Repository ](https://github.com/NoAltF4Dan/Videoflix_frontend)**
 
 ## 1. Clone the Repository
 
@@ -105,9 +97,9 @@ Test the API endpoints to verify functionality:
 ```bash
 curl -X POST http://localhost:8000/api/token/ -d "auth_email=admin@example.com&auth_password=adminpassword" -H "Content-Type: application/x-www-form-urlencoded"
 ```
-- This should return access and refresh tokens.
+This should return **access** and **refresh** tokens.
 - Admin Interface:
-Open http://localhost:8000/admin/ in a browser and log in with admin / adminpassword.
+Open **http://localhost:8000/admin/** in a browser and log in with **admin** / **adminpassword**.
 - Registration:
 ```bash
 curl -X POST http://localhost:8000/register/ -d "user_email=test@example.com&user_password=Test12345&password_repeat=Test12345&accept_privacy=on" -H "Content-Type: application/x-www-form-urlencoded"
@@ -115,9 +107,10 @@ curl -X POST http://localhost:8000/register/ -d "user_email=test@example.com&use
 
 ### 6. Run Tests (Optional)
 Run automated tests to verify code integrity:
-
-> 🔗 **[Frontend Repository ](https://github.com/NoAltF4Dan/Videoflix_frontend)**
+```bash
+docker exec -it videoflix_backend pytest
+```
 
 ---
 
-## 🛠 Installation & Setup
+
