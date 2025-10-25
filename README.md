@@ -52,7 +52,7 @@ git clone <repository-url>
 cd videoflix_main
 ```
 
-## 2. Create a .env File
+## 2. Create .env File
 
 ```bash
 cp .env.template .env
@@ -64,7 +64,9 @@ cp .env.template .env
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-- For EMAIL_HOST_USER and EMAIL_HOST_PASSWORD, use a service like Gmail with an App Password or another SMTP provider.
+- For EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+
+use a service like Gmail with an App Password or another SMTP provider.
 
 ## 3. Build and Start the Containers
 
@@ -85,9 +87,9 @@ This starts the following services:
 ### 4. Verify the Setup
 
 Check the logs to ensure all services start correctly:
-``
+```bash
 docker-compose logs
-``
+```
 
 # Expected output includes:
 
@@ -100,16 +102,16 @@ docker-compose logs
 
 Test the API endpoints to verify functionality:
 - Authentication:
-``
+```bash
 curl -X POST http://localhost:8000/api/token/ -d "auth_email=admin@example.com&auth_password=adminpassword" -H "Content-Type: application/x-www-form-urlencoded"
-``
+```
 - This should return access and refresh tokens.
 - Admin Interface:
 Open http://localhost:8000/admin/ in a browser and log in with admin / adminpassword.
 - Registration:
-``
+```bash
 curl -X POST http://localhost:8000/register/ -d "user_email=test@example.com&user_password=Test12345&password_repeat=Test12345&accept_privacy=on" -H "Content-Type: application/x-www-form-urlencoded"
-``
+```
 
 ### 6. Run Tests (Optional)
 Run automated tests to verify code integrity:
