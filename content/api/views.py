@@ -1,59 +1,61 @@
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-from rest_framework import status
 from django.http import HttpResponse
 from django.conf import settings
-
-from .serializers import VideoSerializer
-from ..models import Video
-
 import os
+from .serializers import VideoSerializer
+from .models import Video
+
 
 #--------------
 # VideoListView
 # Purpose:
-#   List all videos that have finished processing ("completed") for authenticated users.
+#   Fetches a list of videos marked as fully processed for authenticated users.
 #
-# Permissions:
-#   - IsAuthenticated (JWT/session required).
+# Access:
+#   - Requires authentication via JWT or session (IsAuthenticated).
 #
-# Serializer context:
-#   - Injects the current request into the serializer context so that
-#     serializer methods can build absolute URLs (e.g., thumbnail_url).
+# Serializer Context:
+#   - Includes the current request to enable absolute URL construction (e.g., for thumbnails).
 #
 # Notes:
-#   - Queryset filters only completed videos to hide in-progress assets.
+#   - Only videos with "completed" status are included, excluding those still processing.
 #--------------
 class VideoListView(generics.ListAPIView):
-    """API endpoint to list all videos that have been processed and marked as completed."""
+    """
+    Endpoint to retrieve all videos that are fully processed and ready.
+    """
+    permission_classes = [IsAuthenticated]
     queryset = Video.objects.filter(processing_status='completed')
     serializer_class = VideoSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
-        """Adds the current request to the serializer context to allow building absolute URLs."""
+        """
+        Adds the request to the serializer context for absolute URL generation.
+        """
         context = super().get_serializer_context()
-        context['request'] = self.request
+        context['req'] = self.request
         return context
-    
+
+
 #--------------
 # video_manifest
 # Purpose:
-#   Serve the HLS master/variant playlist (index.m3u8) for a specific video and resolution.
+#   Delivers the HLS master playlist (index.m3u8) for a video at a given resolution.
 #
-# Route params:
-#   - movie_id: primary key of the Video.
-#   - resolution: one of {"480p", "720p", "1080p"} mapped to stored HLS paths.
+# Parameters:
+#   - movie_id: The Video model's primary key.
+#   - resolution: Resolution type ("480p", "720p", "1080p") mapped to HLS paths.
 #
 # Behavior:
-#   - Ensures the Video exists and is completed.
-#   - Maps requested resolution to its HLS directory and reads 'index.m3u8'.
-#   - Returns 404 if the video/resolution/manifest file is missing.
+#   - Checks if the video exists and is fully processed.
+#   - Resolves the HLS path for the requested resolution and serves index.m3u8.
+#   - Returns 404 if video, resolution, or manifest file is unavailable.
 #
-# Permissions:
-#   - IsAuthenticated.
+# Access:
+#   - Requires authentication (IsAuthenticated).
 #
 # Response:
 #   - Content-Type: application/vnd.apple.mpegurl
@@ -62,66 +64,55 @@ class VideoListView(generics.ListAPIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def video_manifest(request, movie_id, resolution):
-    """Returns the HLS manifest file for a completed video at the specified resolution."""
-    # Fetch video with completed status
+    """
+    Serves the HLS manifest for a processed video at the specified resolution.
+    """
     try:
         video = Video.objects.get(id=movie_id, processing_status='completed')
     except Video.DoesNotExist:
-        return Response({"detail": "Video not found or not yet processed"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Video not found or not processed"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Map resolution to HLS path
-    resolution_map = {
+    quality_map = {
         '480p': video.hls_480p_path,
         '720p': video.hls_720p_path,
         '1080p': video.hls_1080p_path,
     }
 
-    hls_path = resolution_map.get(resolution)
-    if not hls_path:
-        return Response({"detail": f"Resolution {resolution} not available"}, status=status.HTTP_404_NOT_FOUND)
+    selected_hls_path = quality_map.get(resolution)
+    if not selected_hls_path:
+        return Response({"error": f"Resolution {resolution} not supported"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Construct manifest file path
-    manifest_file = os.path.join(settings.MEDIA_ROOT, hls_path, 'index.m3u8')
+    playlist_path = os.path.join(settings.MEDIA_ROOT, selected_hls_path, 'index.m3u8')
 
-    # Check if manifest file exists
-    if not os.path.exists(manifest_file):
-        return Response({"detail": "Manifest file not found"}, status=status.HTTP_404_NOT_FOUND)
+    if not os.path.exists(playlist_path):
+        return Response({"error": "Playlist file not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # Serve the manifest file
-    with open(manifest_file, 'r') as file:
-        content = file.read()
+    with open(playlist_path, 'r') as playlist:
+        content = playlist.read()
     return HttpResponse(
         content,
         content_type='application/vnd.apple.mpegurl',
         headers={'Content-Disposition': 'inline'}
     )
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from django.http import HttpResponse
-from django.conf import settings
-from .models import Video
-import os
 
 #--------------
 # video_segment
 # Purpose:
-#   Serve a specific HLS media segment (e.g., .ts) for a video at the given resolution.
+#   Serves a specific HLS media segment (e.g., .ts file) for a video at the given resolution.
 #
-# Route params:
-#   - movie_id: primary key of the Video.
-#   - resolution: one of {"480p", "720p", "1080p"} mapped to stored HLS paths.
-#   - segment: filename of the requested segment (e.g., "segment_00001.ts").
+# Parameters:
+#   - movie_id: The Video model's primary key.
+#   - resolution: Resolution type ("480p", "720p", "1080p") mapped to HLS paths.
+#   - segment: Name of the requested segment (e.g., "segment_00001.ts").
 #
 # Behavior:
-#   - Ensures the Video exists and is completed.
-#   - Resolves the segment file on disk and streams it.
-#   - Returns 404 if the video/resolution/segment is missing.
+#   - Verifies the video exists and is fully processed.
+#   - Locates and streams the requested segment file.
+#   - Returns 404 if video, resolution, or segment file is missing.
 #
-# Permissions:
-#   - IsAuthenticated.
+# Access:
+#   - Requires authentication (IsAuthenticated).
 #
 # Response:
 #   - Content-Type: video/MP2T
@@ -130,25 +121,33 @@ import os
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def video_segment(request, movie_id, resolution, segment):
-    """Serves a specific .ts video segment for a completed video at the requested resolution."""
+    """
+    Delivers a specific HLS segment for a processed video at the given resolution.
+    """
     try:
         video = Video.objects.get(id=movie_id, processing_status='completed')
     except Video.DoesNotExist:
-        return Response({"detail": "Video not found or not yet processed"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Video not found or not processed"}, status=status.HTTP_404_NOT_FOUND)
 
-    resolution_map = {
+    quality_map = {
         '480p': video.hls_480p_path,
         '720p': video.hls_720p_path,
         '1080p': video.hls_1080p_path,
     }
 
-    hls_path = resolution_map.get(resolution)
-    if not hls_path:
-        return Response({"detail": f"Resolution {resolution} not available"}, status=status.HTTP_404_NOT_FOUND)
+    selected_hls_path = quality_map.get(resolution)
+    if not selected_hls_path:
+        return Response({"error": f"Resolution {resolution} not supported"}, status=status.HTTP_404_NOT_FOUND)
 
-    segment_file = os.path.join(settings.MEDIA_ROOT, hls_path, segment)
+    segment_path = os.path.join(settings.MEDIA_ROOT, selected_hls_path, segment)
 
-    if not os.path.exists(segment_file):
-        return Response({"detail": "Segment file not found"}, status=status.HTTP_404_NOT_FOUND)
+    if not os.path.exists(segment_path):
+        return Response({"error": "Segment file not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    with open(segment_file,
+    with open(segment_path, 'rb') as segment_file:
+        content = segment_file.read()
+    return HttpResponse(
+        content,
+        content_type='video/MP2T',
+        headers={'Content-Disposition': 'inline'}
+    )
