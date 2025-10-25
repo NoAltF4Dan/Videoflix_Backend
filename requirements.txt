@@ -1,45 +1,44 @@
-# Measures test coverage for Python code.
-coverage==7.10.3
+# Web framework für Backend-Entwicklung (LTS-Version für Stabilität)
+Django>=4.2,<=5.1.2
 
-# Web framework for backend development. Minimum 4.2 (LTS), capped at 5.1.1 for stability.
-Django>=4.2,<=5.1.1
-
-# Adds CORS headers to allow cross-origin requests (e.g., for frontend-backend communication).
-django-cors-headers==4.7.0
-
-# Framework for building RESTful APIs in Django.
+# Framework für RESTful APIs in Django
 djangorestframework==3.16.1
 
-# Provides JSON Web Token authentication for Django REST Framework.
-# Note: Version 5.5.0 does not exist on PyPI; consider 5.3.1 or clarify the source.
-djangorestframework-simplejwt==5.5.0
+# JSON Web Token (JWT) Authentifizierung für Django REST Framework
+djangorestframework-simplejwt==5.3.1
 
-# WSGI server for running Django in production.
-# Note: Version 23.0.0 does not exist on PyPI; consider 22.0.0 or clarify the source.
-gunicorn==23.0.0
+# CORS-Header für Cross-Origin-Requests
+django-cors-headers==4.7.0
 
-# Library for image processing (e.g., for media uploads in Django).
-# Note: Version 11.3.0 does not exist on PyPI; consider 10.4.0 or clarify the source.
-pillow==11.3.0
+# Redis-Cache-Backend für Django
+django-redis==5.4.0
 
-# PostgreSQL adapter for Django. The binary version avoids compilation.
+# Asynchrone Aufgabenverarbeitung mit Redis
+django-rq==2.10.3  # Korrigiert von 2.10.0 auf 2.10.3 (verfügbar auf PyPI)
+
+# WSGI-Server für Django in Produktion
+gunicorn==22.0.0
+
+# Bildverarbeitungsbibliothek
+Pillow==10.4.0
+
+# PostgreSQL-Adapter für Django
 psycopg[binary]==3.2.3
 
-# Framework for writing and running Python tests.
+# Lädt Umgebungsvariablen aus .env-Dateien
+python-dotenv==1.0.1
+
+# Statische Dateien in Django ohne separaten Webserver
+whitenoise==6.7.0
+
+# Test-Framework für Python
 pytest==8.3.3
 
-# Pytest plugin for measuring test coverage, integrates with coverage.
-pytest-cov==5.0.0
-
-# Pytest plugin for Django-specific testing support.
+# Pytest-Plugin für Django-spezifische Tests
 pytest-django==4.9.0
 
-# Loads environment variables from .env files (e.g., for SECRET_KEY, DB credentials).
-# Note: Version 1.1.1 does not exist on PyPI; consider 1.0.1 or clarify the source.
-python-dotenv==1.1.1
+# Pytest-Plugin für Testabdeckungsmessung
+pytest-cov==5.0.0
 
-# Serves static files in Django without a separate web server.
-# Note: Version 6.9.0 does not exist on PyPI; consider 6.7.0 or clarify the source.
-whitenoise==6.9.0
-
-django-rq>=2.10
+# Misst Testabdeckung für Python-Code
+coverage==7.6.3

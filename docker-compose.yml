@@ -1,17 +1,17 @@
 services:
 
   db:
-    image: postgres:latest
+    image: postgres:18
     container_name: videoflix_database
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
 
   redis:
-    image: redis:latest
+    image: redis:7
     container_name: videoflix_redis
     volumes:
       - redis_data:/data
