@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .services.email_service import EmailService
+from ..services.email_service import EmailService
 from .serializers import (
     UserSignupSerializer,
     EmailAuthTokenSerializer,

@@ -1,3 +1,4 @@
+# Python and Django
 __pycache__/
 *.py[cod]
 *.pyo
@@ -9,17 +10,8 @@ dist/
 build/
 db.sqlite3
 db.sqlite3-journal
-static/
-media/
-staticfiles/
-.collected-static/
 *.mo
 *.pot
-.env
-.venv/
-venv/
-ENV/
-*.envrc
 .pytest_cache/
 .coverage
 .coverage.*
@@ -29,6 +21,21 @@ htmlcov/
 .ruff_cache/
 .pytype/
 .cache/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+*.env
+*.envrc
+
+# Django Static and Media Files
+static/
+media/
+staticfiles/
+.collected-static/
+
+# IDE and Editor Files
 .vscode/
 .idea/
 *.iml
@@ -36,12 +43,43 @@ htmlcov/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Logs
 *.log
+
+# Docker
 docker-compose.override.yml
+Dockerfile.local
+*.dockerignore
+.env.docker
+.devcontainer/
+docker-compose.yml.local
+
+# Node.js (falls Frontend-Komponenten verwendet werden)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Celery
 celerybeat-schedule
-__pycache__/
-*.pyc
+celerybeat.pid
+
+# Tests and Coverage
+coverage.xml
+nosetests.xml
+junit.xml
+*.cover
+*.pytest
+*.test
+
+# Miscellaneous
+*.bak
+*.tmp
+*.swp
+*.swo
+*.swn
+*.swm
+*.orig
+*.rej
+*~
