@@ -114,3 +114,11 @@ docker exec -it videoflix_backend pytest
 ---
 
 
+## FRONTEND
+
+- make sure to use > 🔗 **[Frontend Repository (V1.0.0)](https://github.com/NoAltF4Dan/Videoflix_frontend)**
+
+
+---
+
+
